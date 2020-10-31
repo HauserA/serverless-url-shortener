@@ -21,6 +21,16 @@ Parameters:
       Domain for the URL Shortener. (No trailing point).
     Type: String
     Default: 's.a-h.io'
+  HostedZoneName:
+    Description: >-
+      Name of the hosted zone for the custom domain name.
+    Type: String
+    Default: 'a-h.io.'
+  DomainCertificateARN:
+    Description: >-
+      ARN for the Certificate in ACM for my custom subdomain
+    Type: String
+    Default: arn:aws:acm:eu-central-1:436340307850:certificate/0ce0def0-af68-4117-9ed4-2247f61fd22d
 
 Globals:
   Function:
@@ -115,10 +125,18 @@ Resources:
     Properties:
       StageName: !Ref StageName
       DefaultRouteSettings:
-        ThrottlingBurstLimit: 200
+        ThrottlingBurstLimit: 50
+        ThrottlingRateLimit: 50
       RouteSettings:
         "POST /url":
-          ThrottlingBurstLimit: 500 # overridden in HttpApi Event
+          ThrottlingBurstLimit: 5
+          ThrottlingRateLimit: 5
+      Domain:
+        CertificateArn: !Ref DomainCertificateARN
+        DomainName: !Ref DomainName
+        Route53:
+          HostedZoneName: !Ref HostedZoneName
+
 
 Outputs:
   WebEndpoint:

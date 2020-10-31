@@ -1,4 +1,5 @@
-// Create clients and set shared const values outside of the handler.
+
+const errors = require('../utils/errors');
 
 // Get the DynamoDB table name from environment variables
 const tableName = process.env.SAMPLE_TABLE;
@@ -20,18 +21,21 @@ exports.getByIdHandler = async (event) => {
   // Get id from pathParameters from APIGateway because of `/{id}` at template.yml
   const id = event.pathParameters.id;
  
-  // Get the item from the table
-  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#get-property
   var params = {
     TableName : tableName,
     Key: { id: id },
   };
-  const data = await docClient.get(params).promise();
-  const item = data.Item;
- 
+  const data = await docClient.get(params).promise();  
+  if (data.Item === undefined) {
+      return errors.NotFound
+  }
+
+  const url = data.Item.url;
   const response = {
-    statusCode: 200,
-    body: JSON.stringify(item)
+    statusCode: 301,
+    headers: {
+        Location: url,
+    }
   };
  
   // All log statements are written to CloudWatch
