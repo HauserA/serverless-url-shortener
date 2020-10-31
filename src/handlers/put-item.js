@@ -11,8 +11,8 @@ const tableName = process.env.SAMPLE_TABLE;
  * A simple example includes a HTTP post method to add one item to a DynamoDB table.
  */
 exports.putItemHandler = async (event) => {
-    if (event.httpMethod !== 'POST') {
-        throw new Error(`postMethod only accepts POST method, you tried: ${event.httpMethod} method.`);
+    if (event.requestContext.http.method !== 'POST') {
+        throw new Error(`postMethod only accepts POST method, you tried: ${event.requestContext.http.method} method.`);
     }
     // All log statements are written to CloudWatch
     console.info('received:', event);

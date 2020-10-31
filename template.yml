@@ -12,6 +12,11 @@ Description: >-
 Transform:
 - AWS::Serverless-2016-10-31
 
+Parameters:
+  StageName:
+    Type: String
+    Default: Prod
+
 # Resources declares the AWS resources that you want to include in the stack
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
 Resources:
@@ -37,8 +42,9 @@ Resources:
           SAMPLE_TABLE: !Ref SampleTable
       Events:
         Api:
-          Type: Api
+          Type: HttpApi
           Properties:
+            ApiId: !Ref HttpApi
             Path: /
             Method: GET
   # Each Lambda function is defined by properties:
@@ -63,8 +69,9 @@ Resources:
           SAMPLE_TABLE: !Ref SampleTable
       Events:
         Api:
-          Type: Api
+          Type: HttpApi
           Properties:
+            ApiId: !Ref HttpApi
             Path: /{id}
             Method: GET
   # Each Lambda function is defined by properties:
@@ -89,9 +96,10 @@ Resources:
           SAMPLE_TABLE: !Ref SampleTable
       Events:
         Api:
-          Type: Api
+          Type: HttpApi
           Properties:
-            Path: /
+            ApiId: !Ref HttpApi
+            Path: /url
             Method: POST
   # Simple syntax to create a DynamoDB table with a single attribute primary key, more in
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlesssimpletable
@@ -107,7 +115,17 @@ Resources:
         ReadCapacityUnits: 2
         WriteCapacityUnits: 2
 
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: !Ref StageName
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 200
+      RouteSettings:
+        "POST /url":
+          ThrottlingBurstLimit: 500 # overridden in HttpApi Event
+
 Outputs:
   WebEndpoint:
     Description: "API Gateway endpoint URL for Prod stage"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/"

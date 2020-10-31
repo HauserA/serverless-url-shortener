@@ -11,8 +11,8 @@ const docClient = new dynamodb.DocumentClient();
  * A simple example includes a HTTP get method to get all items from a DynamoDB table.
  */
 exports.getAllItemsHandler = async (event) => {
-    if (event.httpMethod !== 'GET') {
-        throw new Error(`getAllItems only accept GET method, you tried: ${event.httpMethod}`);
+    if (event.requestContext.http.method !== 'GET') {
+        throw new Error(`getAllItems only accept GET method, you tried: ${event.requestContext.http.method}`);
     }
     // All log statements are written to CloudWatch
     console.info('received:', event);
