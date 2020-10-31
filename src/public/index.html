@@ -118,6 +118,7 @@
       </div>
       <input class="input" type="text" v-model="url" name="url" id="url" placeholder="enter a url">
       <input class="input" type="text" v-model="id" name="id" id="id" placeholder="enter a id">
+      <input class="input" type="password" v-model="password" name="password" id="password" placeholder="enter the password">
       <button type="submit" class="create">create</button>
     </form>
     <div v-if="created">
@@ -131,6 +132,7 @@
         data: {
           url: '',
           id: '',
+          password: '',
           error: '',
           formVisible: true,
           created: null,
@@ -146,6 +148,7 @@
               body: JSON.stringify({
                 url: this.url,
                 id: this.id || '',
+                password: this.password,
               }),
             });
             if (response.ok) {

@@ -24,3 +24,11 @@ exports.NoLoops = {
     'Content-Type': 'application/json',
   },
 };
+
+exports.WrongPassword = {
+    statusCode: 403,
+    body: JSON.stringify({message: 'Sorry, wrong password'}),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };

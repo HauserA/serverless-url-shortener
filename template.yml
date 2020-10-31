@@ -13,6 +13,9 @@ Transform:
 - AWS::Serverless-2016-10-31
 
 Parameters:
+  PasswordParameter:
+    Type: String
+    Default: 'url-shortener/password'
   StageName:
     Type: String
     Default: Prod
@@ -94,11 +97,14 @@ Resources:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
         - DynamoDBCrudPolicy:
             TableName: !Ref SampleTable
+        - SSMParameterReadPolicy:
+            ParameterName: !Ref PasswordParameter
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
           SAMPLE_TABLE: !Ref SampleTable
           DOMAIN_NAME: !Ref DomainName
+          PASSWORD_PARAMETER: !Ref PasswordParameter
       Events:
         Api:
           Type: HttpApi
@@ -129,8 +135,8 @@ Resources:
         ThrottlingRateLimit: 50
       RouteSettings:
         "POST /url":
-          ThrottlingBurstLimit: 5
-          ThrottlingRateLimit: 5
+          ThrottlingBurstLimit: 1
+          ThrottlingRateLimit: 1
       Domain:
         CertificateArn: !Ref DomainCertificateARN
         DomainName: !Ref DomainName
