@@ -3,6 +3,8 @@
 // Get the DynamoDB table name from environment variables
 const tableName = process.env.SAMPLE_TABLE;
 
+const fs = require('fs');
+
 // Create a DocumentClient that represents the query to add an item
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const docClient = new dynamodb.DocumentClient();
@@ -10,9 +12,9 @@ const docClient = new dynamodb.DocumentClient();
 /**
  * A simple example includes a HTTP get method to get all items from a DynamoDB table.
  */
-exports.getAllItemsHandler = async (event) => {
+exports.getIndexHandler = async (event) => {
     if (event.requestContext.http.method !== 'GET') {
-        throw new Error(`getAllItems only accept GET method, you tried: ${event.requestContext.http.method}`);
+        throw new Error(`getIndex only accept GET method, you tried: ${event.requestContext.http.method}`);
     }
     // All log statements are written to CloudWatch
     console.info('received:', event);
@@ -28,7 +30,10 @@ exports.getAllItemsHandler = async (event) => {
 
     const response = {
         statusCode: 200,
-        body: JSON.stringify(items)
+        body: fs.readFileSync('./src/public/index.html', 'utf8'),
+        headers: {
+            'Content-Type': 'text/html',
+        }
     };
 
     // All log statements are written to CloudWatch

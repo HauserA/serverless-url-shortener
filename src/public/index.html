@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>s.a-h.io</title>
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html,
+      body {
+        height: 100%;
+      }
+      
+      body {
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #262626;
+      }
+      
+      header {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 3rem;
+      }
+
+      h1 {
+          color: #ffffff;
+      }
+      
+      .logo {
+        max-width: 90%;
+        image-rendering: -moz-crisp-edges;
+      }
+      
+      .error {
+        background: #A63446;
+        padding: 0.5rem 1rem;
+        color: #ffffff;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+      
+      .form {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .input,
+      .create {
+        margin: 1rem 0;
+        max-width: 100%;
+      }
+      
+      .input {
+        font-family: inherit;
+        padding-bottom: 1rem;
+        background: none;
+        border: none;
+        color: #ffffff;
+        border-bottom: 2px solid #ffffff;
+        text-align: center;
+        font-size: 1.25rem;
+        transition: border-bottom-color 0.3s ease-in-out;
+        caret-color: #56BC58;
+      }
+      
+      .input:focus {
+        outline: none;
+        border-bottom-color: #56BC58;
+      }
+      
+      .input::placeholder {
+        color: #ffffff;
+        opacity: 0.7;
+      }
+      
+      .create {
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 1.15rem;
+        color: #262626;
+        border: none;
+        background-color: #56BC58;
+        padding: 0.75em 1.25rem;
+        box-shadow: 3px 3px 0 0 #ffffff;
+        transition: box-shadow 0.2s ease-in-out;
+      }
+      
+      .create:hover {
+        box-shadow: 0 0 0 0 #ffffff;
+      }
+      
+      .created {
+        color: #ffffff;
+      }
+      
+      .created a {
+        color: inherit;
+      }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>S.A-H.IO</h1>
+  </header>
+  <main id="app">
+    <form class="form" v-if="formVisible" @submit.prevent="createUrl()">
+      <div v-if="error" class="error">
+        {{error}}
+      </div>
+      <input class="input" type="text" v-model="url" name="url" id="url" placeholder="enter a url">
+      <input class="input" type="text" v-model="slug" name="slug" id="slug" placeholder="enter a slug">
+      <button type="submit" class="create">create</button>
+    </form>
+    <div v-if="created">
+      <p class="created">Your short url is: <a :href="created">{{created}}</a></p>
+    </div>
+  </main>
+  <script src="https://unpkg.com/vue@2.6.11/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+          url: '',
+          slug: '',
+          error: '',
+          formVisible: true,
+          created: null,
+        },
+        methods: {
+          async createUrl() {
+            this.error = '';
+            const response = await fetch('/url', {
+              method: 'POST',
+              headers: {
+                'content-type': 'application/json',
+              },
+              body: JSON.stringify({
+                url: this.url,
+                slug: this.slug || '',
+              }),
+            });
+            if (response.ok) {
+              const result = await response.json();
+              this.formVisible = false;
+              this.created = `https://s.a-h.io/${result.slug}`;
+            } else if (response.status === 429) {
+              this.error = 'You are sending too many requests. Try again in 30 seconds.';
+            } else {
+              const result = await response.json();
+              this.error = result.message;
+            }
+          },
+        },
+      });
+  </script>
+</body>
+</html>
