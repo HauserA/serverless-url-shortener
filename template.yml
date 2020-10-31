@@ -16,6 +16,11 @@ Parameters:
   StageName:
     Type: String
     Default: Prod
+  DomainName:
+    Description: >-
+      Domain for the URL Shortener. (No trailing point).
+    Type: String
+    Default: 's.a-h.io'
 
 Globals:
   Function:
@@ -83,6 +88,7 @@ Resources:
         Variables:
           # Make table name accessible as environment variable from function code during execution
           SAMPLE_TABLE: !Ref SampleTable
+          DOMAIN_NAME: !Ref DomainName
       Events:
         Api:
           Type: HttpApi

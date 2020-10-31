@@ -117,7 +117,7 @@
         {{error}}
       </div>
       <input class="input" type="text" v-model="url" name="url" id="url" placeholder="enter a url">
-      <input class="input" type="text" v-model="slug" name="slug" id="slug" placeholder="enter a slug">
+      <input class="input" type="text" v-model="id" name="id" id="id" placeholder="enter a id">
       <button type="submit" class="create">create</button>
     </form>
     <div v-if="created">
@@ -130,7 +130,7 @@
         el: '#app',
         data: {
           url: '',
-          slug: '',
+          id: '',
           error: '',
           formVisible: true,
           created: null,
@@ -145,13 +145,13 @@
               },
               body: JSON.stringify({
                 url: this.url,
-                slug: this.slug || '',
+                id: this.id || '',
               }),
             });
             if (response.ok) {
               const result = await response.json();
               this.formVisible = false;
-              this.created = `https://s.a-h.io/${result.slug}`;
+              this.created = `https://s.a-h.io/${result.id}`;
             } else if (response.status === 429) {
               this.error = 'You are sending too many requests. Try again in 30 seconds.';
             } else {
