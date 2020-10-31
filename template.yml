@@ -17,6 +17,12 @@ Parameters:
     Type: String
     Default: Prod
 
+Globals:
+  Function:
+    Runtime: nodejs12.x
+    MemorySize: 128
+    Timeout: 10
+
 # Resources declares the AWS resources that you want to include in the stack
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
 Resources:
@@ -28,18 +34,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/get-index.getIndexHandler
-      Runtime: nodejs12.x
-      MemorySize: 128
-      Timeout: 100
-      Description: A simple example includes a HTTP get method to get all items from a DynamoDB table.
-      Policies:
-        # Give Create/Read/Update/Delete Permissions to the SampleTable
-        - DynamoDBCrudPolicy:
-            TableName: !Ref SampleTable
-      Environment:
-        Variables:
-          # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref SampleTable
+      Description: A function to serve the index.html file to create new routes
       Events:
         Api:
           Type: HttpApi
@@ -55,9 +50,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/get-by-id.getByIdHandler
-      Runtime: nodejs12.x
-      MemorySize: 128
-      Timeout: 100
       Description: A simple example includes a HTTP get method to get one item by id from a DynamoDB table.
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
@@ -82,9 +74,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/put-item.putItemHandler
-      Runtime: nodejs12.x
-      MemorySize: 128
-      Timeout: 100
       Description: A simple example includes a HTTP post method to add one item to a DynamoDB table.
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
