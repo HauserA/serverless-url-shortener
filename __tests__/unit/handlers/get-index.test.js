@@ -1,45 +1,29 @@
-// Import all functions from get-index.js 
-const lambda = require('../../../src/handlers/get-index.js'); 
-// Import dynamodb from aws-sdk 
-const dynamodb = require('aws-sdk/clients/dynamodb'); 
- 
-// This includes all tests for getIndexHandler() 
-describe('Test getIndexHandler', () => { 
-    let scanSpy; 
- 
-    // Test one-time setup and teardown, see more in https://jestjs.io/docs/en/setup-teardown 
-    beforeAll(() => { 
-        // Mock dynamodb get and put methods 
-        // https://jestjs.io/docs/en/jest-object.html#jestspyonobject-methodname 
-        scanSpy = jest.spyOn(dynamodb.DocumentClient.prototype, 'scan'); 
-    }); 
- 
-    // Clean up mocks 
-    afterAll(() => { 
-        scanSpy.mockRestore(); 
-    }); 
- 
-    it('should return ids', async () => { 
-        const items = [{ id: 'id1' }, { id: 'id2' }]; 
- 
-        // Return the specified value whenever the spied scan function is called 
-        scanSpy.mockReturnValue({ 
-            promise: () => Promise.resolve({ Items: items }) 
-        }); 
- 
-        const event = { 
-            httpMethod: 'GET' 
-        } 
- 
-        // Invoke helloFromLambdaHandler() 
-        const result = await lambda.getIndexHandler(event); 
- 
-        const expectedResult = { 
-            statusCode: 200, 
-            body: JSON.stringify(items) 
-        }; 
- 
-        // Compare the result with the expected result 
-        expect(result).toEqual(expectedResult); 
-    }); 
-}); 
+// Import all functions from get-index.js
+const lambda = require('../../../src/handlers/get-index.js');
+
+// This includes all tests for getIndexHandler()
+describe('Test getIndexHandler', () => {
+  it('should return the index page', async () => {
+    const event = {
+      requestContext: {
+        http: {
+          method: 'GET',
+        },
+      },
+    };
+
+    // Invoke helloFromLambdaHandler()
+    const result = await lambda.getIndexHandler(event);
+
+    const expectedResult = {
+      statusCode: 200,
+      body: fs.readFileSync('../../../src/public/index.html', 'utf8'),
+      headers: {
+        'Content-Type': 'text/html',
+      },
+    };
+
+    // Compare the result with the expected result
+    expect(result).toEqual(expectedResult);
+  });
+});
