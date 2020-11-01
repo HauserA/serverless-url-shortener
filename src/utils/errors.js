@@ -1,4 +1,3 @@
-
 const fs = require('fs');
 
 exports.NotFound = {
@@ -11,7 +10,7 @@ exports.NotFound = {
 
 exports.InvalidSchema = {
   statusCode: 403,
-  body: JSON.stringify({message: 'Invalid schema'}),
+  body: JSON.stringify({ message: 'Invalid schema' }),
   headers: {
     'Content-Type': 'application/json',
   },
@@ -19,16 +18,16 @@ exports.InvalidSchema = {
 
 exports.NoLoops = {
   statusCode: 403,
-  body: JSON.stringify({message: 'No loops'}),
+  body: JSON.stringify({ message: 'No loops' }),
   headers: {
     'Content-Type': 'application/json',
   },
 };
 
 exports.WrongPassword = {
-    statusCode: 403,
-    body: JSON.stringify({message: 'Sorry, wrong password'}),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
+  statusCode: 403,
+  body: JSON.stringify({ message: 'Sorry, wrong password' }),
+  headers: {
+    'Content-Type': 'application/json',
+  },
+};
