@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 // Import all functions from get-index.js
 const lambda = require('../../../src/handlers/get-index.js');
 

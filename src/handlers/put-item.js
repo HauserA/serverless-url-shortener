@@ -54,6 +54,7 @@ exports.putItemHandler = async (event) => {
     TableName: tableName,
     Item: { id, url },
   };
+  // eslint-disable-next-line no-unused-vars
   const result = await docClient.put(params).promise();
 
   // Return 200 if everything was ok
