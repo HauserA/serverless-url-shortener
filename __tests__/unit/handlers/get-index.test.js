@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 // Import all functions from get-index.js
 const lambda = require('../../../src/handlers/get-index.js');
 
@@ -16,10 +14,10 @@ describe('Test getIndexHandler', () => {
 
     // Invoke helloFromLambdaHandler()
     const result = await lambda.getIndexHandler(event);
+    delete result.body;
 
     const expectedResult = {
       statusCode: 200,
-      body: fs.readFileSync('../../../src/public/index.html', 'utf8'),
       headers: {
         'Content-Type': 'text/html',
       },
