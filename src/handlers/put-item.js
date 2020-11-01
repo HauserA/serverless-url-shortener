@@ -1,4 +1,4 @@
-// Create clients and set shared const values outside of the handler.
+
 const Joi = require('joi');
 
 const errors = require('../utils/errors');
@@ -11,6 +11,7 @@ const docClient = new dynamodb.DocumentClient();
 
 // Get the DynamoDB table name from environment variables
 const tableName = process.env.SAMPLE_TABLE;
+
 const domainName = process.env.DOMAIN_NAME;
 const passwordParameter = process.env.PASSWORD_PARAMETER
 
@@ -19,10 +20,8 @@ const passwordParameter = process.env.PASSWORD_PARAMETER
  */
 exports.putItemHandler = async (event) => {
     if (event.requestContext.http.method !== 'POST') {
-        throw new Error(`postMethod only accepts POST method, you tried: ${event.requestContext.http.method} method.`);
+        throw new Error(`putItem only accepts POST method, you tried: ${event.requestContext.http.method} method.`);
     }
-    // All log statements are written to CloudWatch
-    console.info('received:', event);
 
     // Get id and url from the body of the request
     const body = JSON.parse(event.body)
@@ -31,6 +30,7 @@ exports.putItemHandler = async (event) => {
     const password = body.password;
     delete body.password;
 
+    // Check schema of post parameters
     try {
         Joi.assert({
           id,
@@ -41,23 +41,23 @@ exports.putItemHandler = async (event) => {
         return errors.InvalidSchema;
     }
 
+    // Check if the password is the same as in SSM parameter store
     if (password !== await getSecret(passwordParameter)) {
         return errors.WrongPassword;
     }
 
+    // Loops can cause problems
     if (url.includes(domainName)) {
         return errors.NoLoops;
     }
 
-    // Creates a new item, or replaces an old item with a new item
-    // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property
     var params = {
         TableName : tableName,
         Item: { id : id, url: url }
     };
-
     const result = await docClient.put(params).promise();
 
+    // Return 200 if everything was ok
     const response = {
         statusCode: 200,
         body: JSON.stringify(body)

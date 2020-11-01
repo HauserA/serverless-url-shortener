@@ -25,12 +25,15 @@ exports.getByIdHandler = async (event) => {
     TableName : tableName,
     Key: { id: id },
   };
-  const data = await docClient.get(params).promise();  
+  const data = await docClient.get(params).promise();
+
+  // If no url is found return 404 error page  
   if (data.Item === undefined) {
       return errors.NotFound
   }
 
   const url = data.Item.url;
+  // redirect (301) to url
   const response = {
     statusCode: 301,
     headers: {

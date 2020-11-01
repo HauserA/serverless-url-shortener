@@ -11,6 +11,7 @@ exports.getIndexHandler = async (event) => {
     // All log statements are written to CloudWatch
     console.info('received:', event);
 
+    // Return index page
     const response = {
         statusCode: 200,
         body: fs.readFileSync('./src/public/index.html', 'utf8'),
