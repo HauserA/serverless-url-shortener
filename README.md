@@ -15,7 +15,7 @@ url-shortener/password
 
 Deploy with:
 
-```bash
+```json
 sam build && sam deploy --guided
 ```
 
