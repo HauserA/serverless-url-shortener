@@ -1,4 +1,8 @@
 {
-    "httpMethod": "POST",
-    "body": "{\"id\": \"id1\",\"name\": \"name1\"}"
+    "requestContext": {
+      "http": {
+        "method": "POST"
+      }
+    },
+    "body": "{\"id\": \"id1\",\"url\": \"https://google.de\", \"password\": \"secretpassword\"}",
 }

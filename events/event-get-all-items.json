@@ -1,3 +1,7 @@
 {
-    "httpMethod": "GET"
+    "requestContext": {
+      "http": {
+        "method": "POST"
+      }
+    }
 }
