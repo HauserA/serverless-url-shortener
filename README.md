@@ -19,7 +19,7 @@ Deploy with:
 sam build && sam deploy --guided
 ```
 
-Update the name of your DynamoDB table in envs.json:
+Create/Update the name of your DynamoDB table in envs.json:
 ```json
 {
     "getByIdFunction": {
