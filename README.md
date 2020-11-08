@@ -6,9 +6,19 @@ A serverless url-shortener made with:
 2. AWS Lambda
 3. AWS DynamoDB
 4. AWS SSM Parameter Store
-5. AWS Cloudformation & AWS SAM
+5. AWS IAM
+6. AWS Cloudformation & AWS SAM
+
+The architecture of the project will look like this:
+
+![Diagram](url-shortener-diagram.png)
+
+The website will look like this:
+
+![Screenshot](url-shortener-screenshot.png)
 
 Create a secret password for the url-shortener in AWS SSM Parameter Store with the path:
+
 ```json
 url-shortener/password
 ```
@@ -20,6 +30,7 @@ sam build && sam deploy --guided
 ```
 
 Create/Update the name of your DynamoDB table in envs.json:
+
 ```json
 {
     "getByIdFunction": {
