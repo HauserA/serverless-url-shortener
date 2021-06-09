@@ -29,7 +29,7 @@ Deploy with:
 sam build && sam deploy --guided
 ```
 
-Create/Update the name of your DynamoDB table in envs.json:
+Create/Update the name of your DynamoDB table in env.json:
 
 ```json
 {
